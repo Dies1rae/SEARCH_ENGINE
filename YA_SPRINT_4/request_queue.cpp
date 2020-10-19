@@ -1,6 +1,6 @@
 #include "request_queue.h"
 
-RequestQueue::RequestQueue(const SearchServer& search_server) :search_server_(search_server) {};
+RequestQueue::RequestQueue(const SearchServer& search_server) :search_server_(search_server) {}
 
 std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query, DocumentStatus status) {
     if (this->sec_now_ < this->sec_in_day_) {

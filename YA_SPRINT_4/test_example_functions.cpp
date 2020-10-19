@@ -330,22 +330,6 @@ void Predicat_doc() {
     }
 }
 
-void Relev_calculate_doc() {
-    //check relev and EPSILON, info in HINT
-    const double EPSILON = 1e-6;
-    SearchServer search_server("и в на"s);
-    std::string raw_query = "пушистый ухоженный кот"s;
-    search_server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, { 8, -3 });
-    search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, { 7, 2, 7 });
-    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, { 0 });
-    std::vector<double> res = { .650672, .274653, .101366 };
-    const auto found_docs = search_server.FindTopDocuments(raw_query, [](int document_id [[maybe_unused]], DocumentStatus status, int rating [[maybe_unused]] ) { return status == DocumentStatus::ACTUAL; });
-    for (size_t i = 0; i < found_docs.size(); i++) {
-        ASSERT_HINT((found_docs[i].relevance - res[i]) < EPSILON, "Check maths of \"Find tops right\""s);
-    }
-
-}
-
 void Request_queue_test() {
     SearchServer search_server("и в на"s);
     RequestQueue request_queue(search_server);
@@ -404,8 +388,6 @@ void TestSearchServer() {
     std::cout << "Relevation test is OK!" << std::endl;
     Predicat_doc();
     std::cout << "Function_predicate test is OK!" << std::endl;
-    Relev_calculate_doc();
-    std::cout << "One more to relev test is OK!" << std::endl;
     Request_queue_test();
     std::cout << "Request_queue test is OK!" << std::endl;
     Paginator_test();

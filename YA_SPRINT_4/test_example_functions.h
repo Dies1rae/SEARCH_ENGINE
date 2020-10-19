@@ -87,7 +87,6 @@ void Raiting_doc();
 void Status_doc();
 void Relev_sort_doc();
 void Predicat_doc();
-void Relev_calculate_doc();
 void Request_queue_test();
 void Paginator_test();
 //------------
