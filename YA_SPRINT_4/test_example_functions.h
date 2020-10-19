@@ -1,7 +1,8 @@
 #pragma once
 #include "document.h"
 #include "search_server.h"
-
+#include "request_queue.h"
+#include "paginator.h"
 
 #include <assert.h>
 #include <algorithm>
@@ -87,6 +88,8 @@ void Status_doc();
 void Relev_sort_doc();
 void Predicat_doc();
 void Relev_calculate_doc();
+void Request_queue_test();
+void Paginator_test();
 //------------
 
 void TestSearchServer();
