@@ -1,4 +1,4 @@
-/*
+
 #pragma once
 #include "search_server.h"
 #include "paginator.h"
@@ -93,4 +93,3 @@ void Paginator_test();
 //------------
 
 void TestSearchServer();
-*/

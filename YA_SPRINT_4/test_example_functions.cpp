@@ -1,4 +1,4 @@
-﻿/*
+﻿
 #include "test_example_functions.h"
 using namespace std::string_literals;
 
@@ -387,17 +387,29 @@ void Paginator_test() {
 //------------
 void TestSearchServer() {
     TestExcludeStopWordsFromAddedDocumentContent();
+    std::cout << "Basic test is OK!" << std::endl;
     TestAddDocuments();
+    std::cout << "Add_Doc test is OK!" << std::endl;
     Stop_words_doc();
+    std::cout << "Stop_word test is OK!" << std::endl;
     Minus_doc();
+    std::cout << "Minus_word test is OK!" << std::endl;
     Match_doc();
+    std::cout << "Matching_Calculate test is OK!" << std::endl;
     Raiting_doc();
+    std::cout << "Raiting_calculate test is OK!" << std::endl;
     Status_doc();
+    std::cout << "Status test is OK!" << std::endl;
     Relev_sort_doc();
+    std::cout << "Relevation test is OK!" << std::endl;
     Predicat_doc();
+    std::cout << "Function_predicate test is OK!" << std::endl;
     Relev_calculate_doc();
+    std::cout << "One more to relev test is OK!" << std::endl;
     Request_queue_test();
+    std::cout << "Request_queue test is OK!" << std::endl;
     Paginator_test();
+    std::cout << "Paginator test is OK!" << std::endl;
 }
 
 
@@ -413,4 +425,3 @@ void AssertImpl(bool value, const std::string& expr_str, const std::string& file
         std::abort();
     }
 }
-*/
