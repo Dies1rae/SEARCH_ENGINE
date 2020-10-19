@@ -2,7 +2,7 @@
 #include "search_server.h"
 #include "paginator.h"
 #include "request_queue.h"
-#include "test_example_functions.h"B
+#include "test_example_functions.h"
 #include <iostream>
 
 
