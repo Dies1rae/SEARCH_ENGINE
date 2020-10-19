@@ -1,5 +1,7 @@
 #include "search_server.h"
 
+SearchServer::SearchServer() = default;
+
 SearchServer::SearchServer(const std::string& stop_words_text)
     : SearchServer(SplitIntoWords(stop_words_text))  // Invoke delegating constructor
                                                      // from string container
