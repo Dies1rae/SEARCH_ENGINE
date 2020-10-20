@@ -73,56 +73,49 @@ void TestAddDocuments() {
 }
 
 void Stop_words_doc() {
-    //stop words, info in HINT
-    const std::string content1 = "cat in the city";
-    const std::string content2 = "the bats whant to blood";
-    const std::string content3 = "the pritty pig in mars eat all";
-    const std::string content4 = "TEST_ONE_WORD two";
-
+    const string content1 = "cat in the city"s;
+    const string content2 = "the bats whant to blood"s;
+    const string content3 = "the pritty pig in mars eat all"s;
+    const string content4 = "TEST_ONE_WORD two"s;
     {
         //test without stop words
         SearchServer server(""s);
-
         server.AddDocument(0, content1, DocumentStatus::ACTUAL, { 1,2,3 });
         server.AddDocument(21, content2, DocumentStatus::ACTUAL, { 2,3,4 });
         server.AddDocument(33, content3, DocumentStatus::ACTUAL, { 3,4,5 });
         const auto found_docs = server.FindTopDocuments("the whant pig"s);
-
-        ASSERT_EQUAL_HINT(3, found_docs.size(), "Testing size of found container without \"top\" words"s);
+        assert(3 == found_docs.size());
+        assert(21 == found_docs[0].id);
+        assert(33 == found_docs[1].id);
+        assert(0 == found_docs[2].id);
     }
-
     {
         //test with stop words
         SearchServer server("the"s);
-
         server.AddDocument(0, content1, DocumentStatus::ACTUAL, { 1,2,3 });
         server.AddDocument(21, content2, DocumentStatus::ACTUAL, { 2,3,4 });
         server.AddDocument(33, content3, DocumentStatus::ACTUAL, { 3,4,5 });
-        const auto found_docs = server.FindTopDocuments("the whant pig");
-
-        ASSERT_EQUAL_HINT(2, found_docs.size(), "ize of container with one \"top\" word");
+        const auto found_docs = server.FindTopDocuments("the whant pig"s);
+        assert(2 == found_docs.size());
+        assert(21 == found_docs[0].id);
+        assert(33 == found_docs[1].id);
     }
-
     {
         //test one word in stop & querty & content
+        
         SearchServer server("TEST_ONE_WORD"s);
-
         server.AddDocument(0, content4, DocumentStatus::ACTUAL, { 1,2,3 });
         const auto found_docs = server.FindTopDocuments("TEST_ONE_WORD"s);
-
-        ASSERT_EQUAL_HINT(0, found_docs.size(), "Test size of container when whole content is \"top\" word");
+        assert(0 == found_docs.size());
     }
-
     {
         //empty content add
+
         SearchServer server(""s);
-
-        server.AddDocument(0, ""s, DocumentStatus::ACTUAL, { 1,2,3 });
-        const auto found_docs = server.FindTopDocuments("");
-
-        ASSERT_EQUAL_HINT(0, found_docs.size(), "When all - \"top\", \"content\", \"query\" are empty"s);
+        server.AddDocument(0, "", DocumentStatus::ACTUAL, { 1,2,3 });
+        const auto found_docs = server.FindTopDocuments(""s);
+        assert(0 == found_docs.size());
     }
-
 }
 
 void Minus_doc() {

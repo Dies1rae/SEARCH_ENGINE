@@ -1,4 +1,5 @@
 #include "search_server.h"
+using namespace std;
 
 SearchServer::SearchServer() = default;
 
@@ -23,7 +24,7 @@ void SearchServer::AddDocument(int document_id, const std::string& document, Doc
 }
 
 std::vector<Document> SearchServer::FindTopDocuments(const std::string& raw_query, DocumentStatus status) const {
-    return FindTopDocuments(raw_query, [status](int document_id [[maybe_unused]], DocumentStatus document_status, int rating) {
+    return FindTopDocuments(raw_query, [status](int document_id [[maybe_unused]], DocumentStatus document_status, int rating [[maybe_unused]] ) {
         return document_status == status;
         });
 }

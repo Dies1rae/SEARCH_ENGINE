@@ -13,7 +13,7 @@
 #include <vector>
 #include <deque>
 using namespace std::string_literals;
-
+using namespace std;
 const int MAX_RESULT_DOCUMENT_COUNT = 5;
 
 class SearchServer {
