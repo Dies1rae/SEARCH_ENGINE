@@ -8,31 +8,33 @@
 
 
 
+
+
 int main() {
     TestSearchServer();
     std::cout << "All test's are OK" << std::endl;
 
-    SearchServer search_server("è â íà"s);
+    SearchServer search_server("Ğ¸ Ğ² Ğ½Ğ°"s);
     RequestQueue request_queue(search_server);
 
     constexpr int sec_in_day = 1439;
 
-    search_server.AddDocument(1, "ïóøèñòûé êîò ïóøèñòûé õâîñò"s, DocumentStatus::ACTUAL, { 7, 2, 7 });
-    search_server.AddDocument(2, "ïóøèñòûé ï¸ñ è ìîäíûé îøåéíèê"s, DocumentStatus::ACTUAL, { 1, 2, 3 });
-    search_server.AddDocument(3, "áîëüøîé êîò ìîäíûé îøåéíèê "s, DocumentStatus::ACTUAL, { 1, 2, 8 });
-    search_server.AddDocument(4, "áîëüøîé ï¸ñ ñêâîğåö åâãåíèé"s, DocumentStatus::ACTUAL, { 1, 3, 2 });
-    search_server.AddDocument(5, "áîëüøîé ï¸ñ ñêâîğåö âàñèëèé"s, DocumentStatus::ACTUAL, { 1, 1, 1 });
+    search_server.AddDocument(1, "Ğ¿ÑƒÑˆĞ¸ÑÑ‚Ñ‹Ğ¹ ĞºĞ¾Ñ‚ Ğ¿ÑƒÑˆĞ¸ÑÑ‚Ñ‹Ğ¹ Ñ…Ğ²Ğ¾ÑÑ‚"s, DocumentStatus::ACTUAL, { 7, 2, 7 });
+    search_server.AddDocument(2, "Ğ¿ÑƒÑˆĞ¸ÑÑ‚Ñ‹Ğ¹ Ğ¿Ñ‘Ñ Ğ¸ Ğ¼Ğ¾Ğ´Ğ½Ñ‹Ğ¹ Ğ¾ÑˆĞµĞ¹Ğ½Ğ¸Ğº"s, DocumentStatus::ACTUAL, { 1, 2, 3 });
+    search_server.AddDocument(3, "Ğ±Ğ¾Ğ»ÑŒÑˆĞ¾Ğ¹ ĞºĞ¾Ñ‚ Ğ¼Ğ¾Ğ´Ğ½Ñ‹Ğ¹ Ğ¾ÑˆĞµĞ¹Ğ½Ğ¸Ğº "s, DocumentStatus::ACTUAL, { 1, 2, 8 });
+    search_server.AddDocument(4, "Ğ±Ğ¾Ğ»ÑŒÑˆĞ¾Ğ¹ Ğ¿Ñ‘Ñ ÑĞºĞ²Ğ¾Ñ€ĞµÑ† ĞµĞ²Ğ³ĞµĞ½Ğ¸Ğ¹"s, DocumentStatus::ACTUAL, { 1, 3, 2 });
+    search_server.AddDocument(5, "Ğ±Ğ¾Ğ»ÑŒÑˆĞ¾Ğ¹ Ğ¿Ñ‘Ñ ÑĞºĞ²Ğ¾Ñ€ĞµÑ† Ğ²Ğ°ÑĞ¸Ğ»Ğ¸Ğ¹"s, DocumentStatus::ACTUAL, { 1, 1, 1 });
 
-    // 1439 çàïğîñîâ ñ íóëåâûì ğåçóëüòàòîì
+    // 1439 Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ¾Ğ² Ñ Ğ½ÑƒĞ»ĞµĞ²Ñ‹Ğ¼ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚Ğ¾Ğ¼
     for (int i = 0; i < sec_in_day; ++i) {
-        request_queue.AddFindRequest("ïóñòîé çàïğîñ"s);
+        request_queue.AddFindRequest("Ğ¿ÑƒÑÑ‚Ğ¾Ğ¹ Ğ·Ğ°Ğ¿Ñ€Ğ¾Ñ"s);
     }
-    // âñå åùå 1439 çàïğîñîâ ñ íóëåâûì ğåçóëüòàòîì
-    request_queue.AddFindRequest("ïóøèñòûé ï¸ñ"s);
-    // íîâûå ñóòêè, ïåğâûé çàïğîñ óäàëåí, 1438 çàïğîñîâ ñ íóëåâûì ğåçóëüòàòîì
-    request_queue.AddFindRequest("áîëüøîé îøåéíèê"s);
-    // ïåğâûé çàïğîñ óäàëåí, 1437 çàïğîñîâ ñ íóëåâûì ğåçóëüòàòîì
-    request_queue.AddFindRequest("ñêâîğåö"s);
-    cout << "Çàïğîñîâ, ïî êîòîğûì íè÷åãî íå íàøëîñü "s << request_queue.GetNoResultRequests();
+    // Ğ²ÑĞµ ĞµÑ‰Ğµ 1439 Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ¾Ğ² Ñ Ğ½ÑƒĞ»ĞµĞ²Ñ‹Ğ¼ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚Ğ¾Ğ¼
+    request_queue.AddFindRequest("Ğ¿ÑƒÑˆĞ¸ÑÑ‚Ñ‹Ğ¹ Ğ¿Ñ‘Ñ"s);
+    // Ğ½Ğ¾Ğ²Ñ‹Ğµ ÑÑƒÑ‚ĞºĞ¸, Ğ¿ĞµÑ€Ğ²Ñ‹Ğ¹ Ğ·Ğ°Ğ¿Ñ€Ğ¾Ñ ÑƒĞ´Ğ°Ğ»ĞµĞ½, 1438 Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ¾Ğ² Ñ Ğ½ÑƒĞ»ĞµĞ²Ñ‹Ğ¼ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚Ğ¾Ğ¼
+    request_queue.AddFindRequest("Ğ±Ğ¾Ğ»ÑŒÑˆĞ¾Ğ¹ Ğ¾ÑˆĞµĞ¹Ğ½Ğ¸Ğº"s);
+    // Ğ¿ĞµÑ€Ğ²Ñ‹Ğ¹ Ğ·Ğ°Ğ¿Ñ€Ğ¾Ñ ÑƒĞ´Ğ°Ğ»ĞµĞ½, 1437 Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ¾Ğ² Ñ Ğ½ÑƒĞ»ĞµĞ²Ñ‹Ğ¼ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚Ğ¾Ğ¼
+    request_queue.AddFindRequest("ÑĞºĞ²Ğ¾Ñ€ĞµÑ†"s);
+    cout << "Ğ—Ğ°Ğ¿Ñ€Ğ¾ÑĞ¾Ğ², Ğ¿Ğ¾ ĞºĞ¾Ñ‚Ğ¾Ñ€Ñ‹Ğ¼ Ğ½Ğ¸Ñ‡ĞµĞ³Ğ¾ Ğ½Ğµ Ğ½Ğ°ÑˆĞ»Ğ¾ÑÑŒ "s << request_queue.GetNoResultRequests();
     return 0;
 }
