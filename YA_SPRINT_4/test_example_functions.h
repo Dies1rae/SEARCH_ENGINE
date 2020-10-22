@@ -26,11 +26,11 @@ void AssertEqualImpl(const TType& t, const UType& u, const std::string& t_str, c
     const std::string& func, uint32_t line, const std::string& hint) {
     if (t != u) {
         std::cout << std::boolalpha;
-        std::cout << file << "(" << line << "): " << func << ": ";
-        std::cout << "ASSERT_EQUAL(" << t_str << ", " << u_str << ") failed: ";
-        std::cout << t << " != " << u << ".";
+        std::cout << file << "("s << line << "): "s << func << ": "s;
+        std::cout << "ASSERT_EQUAL("s << t_str << ", "s << u_str << ") failed: "s;
+        std::cout << t << " != "s << u << "."s;
         if (!hint.empty()) {
-            std::cout << " Hint: " << hint;
+            std::cout << " Hint: "s << hint;
         }
         std::cout << std::endl;
         std::abort();
@@ -44,11 +44,11 @@ void AssertEqualImpl(const TContainer& t, const TContainer& u, const std::string
         for (size_t ptr = 0; ptr < t.size(); ptr++) {
             if (t[ptr != u[ptr]]) {
                 std::cout << std::boolalpha;
-                std::cout << file << "(" << line << "): " << func << ": ";
-                std::cout << "ASSERT_EQUAL(" << t_str << ", " << u_str << ") failed: ";
-                std::cout << t << " != " << u << ".";
+                std::cout << file << "("s << line << "): "s << func << ": "s;
+                std::cout << "ASSERT_EQUAL("s << t_str << ", "s << u_str << ") failed: "s;
+                std::cout << t << " != "s << u << "."s;
                 if (!hint.empty()) {
-                    std::cout << " Hint: " << hint;
+                    std::cout << " Hint: "s << hint;
                 }
                 std::cout << std::endl;
                 std::abort();
@@ -56,11 +56,11 @@ void AssertEqualImpl(const TContainer& t, const TContainer& u, const std::string
         }
     } else {
         std::cout << std::boolalpha;
-        std::cout << file << "(" << line << "): " << func << ": ";
-        std::cout << "ASSERT_EQUAL(" << t_str << ", " << u_str << ") failed: ";
-        std::cout << t << " != " << u << ".";
+        std::cout << file << "("s << line << "): "s << func << ": "s;
+        std::cout << "ASSERT_EQUAL("s << t_str << ", "s << u_str << ") failed: "s;
+        std::cout << t << " != "s << u << "."s;
         if (!hint.empty()) {
-            std::cout << " Hint: " << hint;
+            std::cout << " Hint: "s << hint;
         }
         std::cout << std::endl;
         std::abort();

@@ -28,8 +28,7 @@ public:
     std::vector<Document> AddFindRequest(const std::string& raw_query, TDocumentPredicate document_predicate) {
         if (this->sec_now_ < this->sec_in_day_) {
             this->sec_now_++;
-        }
-        else {
+        } else {
             this->sec_now_ = 0;
         }
         QueryResult query_res;
@@ -39,8 +38,7 @@ public:
         if (this->requests_.size() == this->sec_in_day_) {
             this->requests_.pop_back();
             this->requests_.push_front(query_res);
-        }
-        else {
+        } else {
             this->requests_.push_back(query_res);
         }
         this->zero_query = count_if(this->requests_.begin(), this->requests_.end(), [](QueryResult& A) { return A.Searched_.size() == 0; });

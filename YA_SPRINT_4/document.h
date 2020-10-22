@@ -7,7 +7,7 @@ using namespace std::string_literals;
 struct Document {
 public:
     Document();
-    Document(int id, double relevance, int rating);
+    Document(int id_, double relevance_, int rating_);
     int id;
     double relevance;
     int rating;

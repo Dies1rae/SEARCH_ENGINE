@@ -9,6 +9,9 @@
 
 
 int main() {
+    TestSearchServer();
+    std::cout << "All test's are OK" << std::endl;
+
     SearchServer search_server("и в на"s);
     RequestQueue request_queue(search_server);
 
