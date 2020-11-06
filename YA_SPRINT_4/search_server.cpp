@@ -132,14 +132,13 @@ void MatchDocuments(const SearchServer& search_server, const std::string& query)
 }
 
 void RemoveDuplicates(SearchServer& search_server) {
-    int ctr = 0;
     std::vector<std::vector<std::string>> id_to_remove(search_server.GetDocumentCount()+1);
     for (const int document_id : search_server) {
         for (const auto& [word, freq] : search_server.GetWordFrequencies(document_id)) {
             id_to_remove[document_id].push_back(word);
         }
-        ctr++;
     }
+
     for (int ptr = 1; ptr + 1 < id_to_remove.size(); ptr++) {
         if (id_to_remove[ptr] == id_to_remove[ptr + 1]) {
             std::cout << "Found duplicate document id "s << ptr << std::endl;
