@@ -20,20 +20,19 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         
         SearchServer server("in the"s);
         server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
-        ASSERT_HINT(server.FindTopDocuments("in").empty(), "top words must be excluded from documents");
+        ASSERT_HINT(server.FindTopDocuments("in").empty(), "top words must be excluded from documents"s);
     }
 }
 
 void TestAddDocuments() {
 
     //Adding doc and find it by a words, info in HINT
-    const std::string content_1 = "cat in the city";
-    const std::string content_2 = "cat in the forest";
-    const std::string content_3 = "cat cat cat";
-    const std::string content_4 = "big city";
-    const std::string content_5 = "mall town";
+    const std::string content_1 = "cat in the city"s;
+    const std::string content_2 = "cat in the forest"s;
+    const std::string content_3 = "cat cat cat"s;
+    const std::string content_4 = "big city"s;
+    const std::string content_5 = "mall town"s;
     const std::vector<int> ratings = { 1, 2, 3 };
-    // Сначала убеждаемся, что документы добавлены и могут быть найдены
     {
         SearchServer server(""s);
         server.AddDocument(1, content_5, DocumentStatus::ACTUAL, ratings);
@@ -41,14 +40,13 @@ void TestAddDocuments() {
         server.AddDocument(3, content_3, DocumentStatus::ACTUAL, ratings);
         server.AddDocument(4, content_2, DocumentStatus::ACTUAL, ratings);
         server.AddDocument(5, content_1, DocumentStatus::ACTUAL, ratings);
-        ASSERT_EQUAL_HINT(server.GetDocumentCount(), 5, "Get all adding docs");
-        const auto found_docs = server.FindTopDocuments("cat");
-        ASSERT_EQUAL_HINT(found_docs.size(), 3, "Get number of docs with \"cat\" word");
+        ASSERT_EQUAL_HINT(server.GetDocumentCount(), 5, "Get all adding docs"s);
+        const auto found_docs = server.FindTopDocuments("cat"s);
+        ASSERT_EQUAL_HINT(found_docs.size(), 3, "Get number of docs with \"cat\" word"s);
         for (const Document& doc : found_docs) {
-            ASSERT_HINT((doc.id == 5 || doc.id == 4 || doc.id == 3), "Get property ID's in \"found_docs\" by \"cat\" word");
+            ASSERT_HINT((doc.id == 5 || doc.id == 4 || doc.id == 3), "Get property ID's in \"found_docs\" by \"cat\" word"s);
         }
     }
-    // Убедимся, что лишние документы найдены не будут
     {
         SearchServer server(""s);
         server.AddDocument(1, content_1, DocumentStatus::ACTUAL, ratings);
@@ -56,14 +54,12 @@ void TestAddDocuments() {
         ASSERT_HINT(found_docs.empty(), "No other docs find"s);
         ASSERT(server.GetDocumentCount() == 1);
     }
-    // Убедимся, что если ни один документ не добавлен, то ничего найдено не будет
     {
         SearchServer server(""s);
         const auto found_docs = server.FindTopDocuments("empty"s);
         ASSERT_HINT(found_docs.empty(), "No empty docs with empty content find"s);
         ASSERT(server.GetDocumentCount() == 0);
     }
-    // Убедимся, что если запрос пустая строка, то ничего найдено не будет
     {
         SearchServer server(""s);
         server.AddDocument(5, content_1, DocumentStatus::ACTUAL, ratings);
@@ -102,7 +98,6 @@ void Stop_words_doc() {
     }
     {
         //test one word in stop & querty & content
-        
         SearchServer server("TEST_ONE_WORD"s);
         server.AddDocument(0, content4, DocumentStatus::ACTUAL, { 1,2,3 });
         const auto found_docs = server.FindTopDocuments("TEST_ONE_WORD"s);
@@ -110,7 +105,6 @@ void Stop_words_doc() {
     }
     {
         //empty content add
-
         SearchServer server(""s);
         server.AddDocument(0, "", DocumentStatus::ACTUAL, { 1,2,3 });
         const auto found_docs = server.FindTopDocuments(""s);
@@ -126,17 +120,16 @@ void Minus_doc() {
     server.AddDocument(45, "bbb bbb1 bbb2 bbb3 abcde"s, DocumentStatus::ACTUAL, { 1, 2, 3 });
     {//test1
         docs = server.FindTopDocuments("abcde -aaa bbb"s);
-        ASSERT_EQUAL_HINT(docs.size(), 1, "Test with \"minus\" word in \"query\"");
+        ASSERT_EQUAL_HINT(docs.size(), 1, "Test with \"minus\" word in \"query\""s);
         ASSERT_EQUAL(docs.at(0).id, 45);
     }
     {//test2
         docs = server.FindTopDocuments("-abcde aaa bbb"s);
-        ASSERT_EQUAL_HINT(docs.size(), 0, "Test when \"minus\" word is in \"content\" std::strings");
+        ASSERT_EQUAL_HINT(docs.size(), 0, "Test when \"minus\" word is in \"content\" std::strings"s);
     }
     {//test3
         docs = server.FindTopDocuments("-no_words aaa bbb"s);
-        ASSERT_EQUAL_HINT(docs.size(), 2, "Test when \"minus\" word is not in \"content\" std::strings");
-
+        ASSERT_EQUAL_HINT(docs.size(), 2, "Test when \"minus\" word is not in \"content\" std::strings"s);
         for (const auto& doc : docs) {
             ASSERT(doc.id == 45 || doc.id == 42);
         }
@@ -148,7 +141,6 @@ void Match_doc() {
     const int doc_id = 0;
     const std::string content = "cat in the city"s;
     const std::vector<int> ratings = { 1, 2, 3 };
-
     {
         SearchServer server(""s);
         server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
@@ -205,30 +197,30 @@ void Raiting_doc() {
     {
         // pos
         SearchServer server(""s);
-        server.AddDocument(45, "average deal of", DocumentStatus::ACTUAL, { 1, 2, 3 });
-        server.AddDocument(23, "average deal of", DocumentStatus::ACTUAL, { 0 });
-        server.AddDocument(0, "average deal of", DocumentStatus::ACTUAL, { 4, 5, 6 });
+        server.AddDocument(45, "average deal of"s, DocumentStatus::ACTUAL, { 1, 2, 3 });
+        server.AddDocument(23, "average deal of"s, DocumentStatus::ACTUAL, { 0 });
+        server.AddDocument(0, "average deal of"s, DocumentStatus::ACTUAL, { 4, 5, 6 });
         const auto found_docs = server.FindTopDocuments("deal");
         for (int ptr = 1; ptr < found_docs.size(); ptr++) {
-            ASSERT_HINT(found_docs[ptr - 1].rating >= found_docs[ptr].rating, "Check right position with raitings sort from H --> L");
+            ASSERT_HINT(found_docs[ptr - 1].rating >= found_docs[ptr].rating, "Check right position with raitings sort from H --> L"s);
         }
-        ASSERT_EQUAL_HINT(found_docs[0].rating, int((4 + 5 + 6) / 3), "Matching math of raitings");
-        ASSERT_EQUAL_HINT(found_docs[1].rating, int((1 + 2 + 3) / 3), "Matching math of raitings");
-        ASSERT_EQUAL_HINT(found_docs[2].rating, 0, "Matching math of raitings");
+        ASSERT_EQUAL_HINT(found_docs[0].rating, int((4 + 5 + 6) / 3), "Matching math of raitings"s);
+        ASSERT_EQUAL_HINT(found_docs[1].rating, int((1 + 2 + 3) / 3), "Matching math of raitings"s);
+        ASSERT_EQUAL_HINT(found_docs[2].rating, 0, "Matching math of raitings"s);
     }
 
     {
         SearchServer server(""s);
-        const std::string content = "tralala";
+        const std::string content = "tralala"s;
         server.AddDocument(45, content, DocumentStatus::ACTUAL, { 1, 2, 3 });
         server.AddDocument(23, content, DocumentStatus::ACTUAL, { 0 });
         server.AddDocument(0, content, DocumentStatus::ACTUAL, { 4, 5, 6 });
         server.AddDocument(1, content, DocumentStatus::ACTUAL, { -1, -4, -10 });
         const auto found_docs = server.FindTopDocuments(content);
-        ASSERT_EQUAL_HINT(found_docs[0].rating, int((4 + 5 + 6) / 3), "Matching math of raitings");
-        ASSERT_EQUAL_HINT(found_docs[1].rating, int((1 + 2 + 3) / 3), "Matching math of raitings");
-        ASSERT_EQUAL_HINT(found_docs[2].rating, 0, "Matching math of raitings - ZERO case");
-        ASSERT_EQUAL_HINT(found_docs[3].rating, int((-1 - 4 - 10) / 3), "Matching math of raitings - minus case");
+        ASSERT_EQUAL_HINT(found_docs[0].rating, int((4 + 5 + 6) / 3), "Matching math of raitings"s);
+        ASSERT_EQUAL_HINT(found_docs[1].rating, int((1 + 2 + 3) / 3), "Matching math of raitings"s);
+        ASSERT_EQUAL_HINT(found_docs[2].rating, 0, "Matching math of raitings - ZERO case"s);
+        ASSERT_EQUAL_HINT(found_docs[3].rating, int((-1 - 4 - 10) / 3), "Matching math of raitings - minus case"s);
     }
 }
 
@@ -344,9 +336,9 @@ void Request_queue_test() {
     request_queue.AddFindRequest("скворец"s);
     ASSERT(request_queue.GetNoResultRequests() == 1437);
 }
+
 void Paginator_test() {
     SearchServer search_server("and with"s);
-
     search_server.AddDocument(1, "funny pet and nasty rat"s, DocumentStatus::ACTUAL, { 7, 2, 7 });
     search_server.AddDocument(2, "funny pet with curly hair"s, DocumentStatus::ACTUAL, { 1, 2, 3 });
     search_server.AddDocument(3, "big cat nasty hair"s, DocumentStatus::ACTUAL, { 1, 2, 8 });
@@ -363,37 +355,37 @@ void Paginator_test() {
 //------------
 void TestSearchServer() {
     TestExcludeStopWordsFromAddedDocumentContent();
-    std::cout << "Basic test is OK!" << std::endl;
+    std::cout << "Basic test is OK!"s << std::endl;
     TestAddDocuments();
-    std::cout << "Add_Doc test is OK!" << std::endl;
+    std::cout << "Add_Doc test is OK!"s << std::endl;
     Stop_words_doc();
-    std::cout << "Stop_word test is OK!" << std::endl;
+    std::cout << "Stop_word test is OK!"s << std::endl;
     Minus_doc();
-    std::cout << "Minus_word test is OK!" << std::endl;
+    std::cout << "Minus_word test is OK!"s << std::endl;
     Match_doc();
-    std::cout << "Matching_Calculate test is OK!" << std::endl;
+    std::cout << "Matching_Calculate test is OK!"s << std::endl;
     Raiting_doc();
-    std::cout << "Raiting_calculate test is OK!" << std::endl;
+    std::cout << "Raiting_calculate test is OK!"s << std::endl;
     Status_doc();
-    std::cout << "Status test is OK!" << std::endl;
+    std::cout << "Status test is OK!"s << std::endl;
     Relev_sort_doc();
-    std::cout << "Relevation test is OK!" << std::endl;
+    std::cout << "Relevation test is OK!"s << std::endl;
     Predicat_doc();
-    std::cout << "Function_predicate test is OK!" << std::endl;
+    std::cout << "Function_predicate test is OK!"s << std::endl;
     Request_queue_test();
-    std::cout << "Request_queue test is OK!" << std::endl;
+    std::cout << "Request_queue test is OK!"s << std::endl;
     Paginator_test();
-    std::cout << "Paginator test is OK!" << std::endl;
+    std::cout << "Paginator test is OK!"s << std::endl;
 }
 
 
 void AssertImpl(bool value, const std::string& expr_str, const std::string& file,
     const std::string& func, uint32_t line, const std::string& hint) {
     if (!value) {
-        std::cout << file << "(" << line << "): " << func << ": ";
-        std::cout << "ASSERT(" << expr_str << ") failed.";
+        std::cout << file << "("s << line << "): "s << func << ": "s;
+        std::cout << "ASSERT("s << expr_str << ") failed."s;
         if (!hint.empty()) {
-            std::cout << " Hint: " << hint;
+            std::cout << " Hint: "s << hint;
         }
         std::cout << std::endl;
         std::abort();

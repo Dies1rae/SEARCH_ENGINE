@@ -12,19 +12,22 @@
 #include <utility>
 #include <vector>
 #include <deque>
-using namespace std::string_literals;
 using namespace std;
-const int MAX_RESULT_DOCUMENT_COUNT = 5;
+
 
 class SearchServer {
 public:
+    inline static constexpr int INVALID_DOCUMENT_ID = -1;
+    inline static constexpr int MAX_RESULT_DOCUMENT_COUNT = 5;
+    inline static constexpr double EPSILON = 1e-6;
+
     explicit SearchServer();
     template <typename StringContainer>
     explicit SearchServer(const StringContainer& stop_words)
         : stop_words_(MakeUniqueNonEmptyStrings(stop_words))  // Extract non-empty stop words
     {
         if (!all_of(stop_words_.begin(), stop_words_.end(), IsValidWord)) {
-            throw std::invalid_argument("Some of stop words are invalid"s);
+            throw std::invalid_argument("Some of stop words are invalid "s);
         }
     }
 
@@ -39,7 +42,7 @@ public:
         auto matched_documents = FindAllDocuments(query, document_predicate);
 
         sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
-            if (abs(lhs.relevance - rhs.relevance) < 1e-6) {
+            if (abs(lhs.relevance - rhs.relevance) < EPSILON){
                 return lhs.rating > rhs.rating;
             } else {
                 return lhs.relevance > rhs.relevance;
@@ -48,7 +51,6 @@ public:
         if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
             matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
         }
-
         return matched_documents;
     }
 

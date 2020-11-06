@@ -2,7 +2,7 @@
 
 Document::Document():id(0), relevance(0.0), rating(0) {}
 
-Document::Document(int id, double relevance, int rating): id(id), relevance(relevance), rating(rating) {}
+Document::Document(int id_, double relevance_, int rating_): id(id_), relevance(relevance_), rating(rating_) {}
 
 std::ostream& operator<<(std::ostream& out, const Document& document) {
     out << "{ "s
