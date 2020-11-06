@@ -61,7 +61,19 @@ public:
 
     int GetDocumentId(int index) const;
 
+    auto begin() const {
+        return this->document_ids_.begin();
+    }
+
+    auto end() const {
+        return this->document_ids_.end();
+    }
+
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
+
+    const map<string, double>& GetWordFrequencies(int document_id) const;
+
+    void RemoveDocument(int document_id);
 
 private:
     struct DocumentData {
@@ -72,6 +84,7 @@ private:
     std::map<std::string, std::map<int, double>> word_to_document_freqs_;
     std::map<int, DocumentData> documents_;
     std::vector<int> document_ids_;
+    std::map<int, std::map<std::string, double>> Word_Frequencies_;
 
     bool IsStopWord(const std::string& word) const {
         return stop_words_.count(word) > 0;
@@ -199,3 +212,5 @@ void AddDocument(SearchServer& search_server, int document_id, const std::string
 void FindTopDocuments(const SearchServer& search_server, const std::string& raw_query);
 
 void MatchDocuments(const SearchServer& search_server, const std::string& query);
+
+void RemoveDuplicates(SearchServer& search_server);
