@@ -11,7 +11,7 @@
 
 
 int main() {
-    TestSearchServer();
+    //TestSearchServer();
     SearchServer search_server("and with"s);
 
     AddDocument(search_server, 1, "funny pet and nasty rat"s, DocumentStatus::ACTUAL, { 7, 2, 7 });
