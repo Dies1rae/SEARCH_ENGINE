@@ -3,15 +3,16 @@
 #include "paginator.h"
 #include "request_queue.h"
 #include "test_example_functions.h"
-#include <iostream>
 #include "remove_duplicates.h"
-
+#include "log_duration.h"
+#include <iostream>
 
 
 
 
 int main() {
-    //TestSearchServer();
+    TestSearchServer();
+    std::cout << "All test's are OK"s << std::endl;
     SearchServer search_server("and with"s);
 
     AddDocument(search_server, 1, "funny pet and nasty rat"s, DocumentStatus::ACTUAL, { 7, 2, 7 });
