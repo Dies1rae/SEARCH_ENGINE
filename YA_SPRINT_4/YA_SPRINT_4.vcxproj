@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="document.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="process_queries.cpp" />
     <ClCompile Include="read_input_functions.cpp" />
     <ClCompile Include="remove_duplicates.cpp" />
     <ClCompile Include="request_queue.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="document.h" />
     <ClInclude Include="log_duration.h" />
     <ClInclude Include="paginator.h" />
+    <ClInclude Include="process_queries.h" />
     <ClInclude Include="read_input_functions.h" />
     <ClInclude Include="remove_duplicates.h" />
     <ClInclude Include="request_queue.h" />
