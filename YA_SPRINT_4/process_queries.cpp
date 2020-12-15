@@ -13,3 +13,16 @@ std::vector<std::vector<Document>> ProcessQueries(const SearchServer& search_ser
 
 	return res;
 }
+
+std::vector<Document> ProcessQueriesJoined(const SearchServer& search_server,
+	const std::vector<std::string>& queries) {
+	std::vector<Document> res;
+
+	for (size_t ptr = 0; ptr < queries.size(); ptr++) {
+		for (const Document& doc : search_server.FindTopDocuments(queries[ptr])) {
+			res.push_back(doc);
+		}
+	}
+	
+	return res;
+}
