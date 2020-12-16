@@ -64,22 +64,24 @@ std::tuple<std::vector<std::string>, DocumentStatus> SearchServer::MatchDocument
 
 
 const std::map<std::string, double>& SearchServer::GetWordFrequencies(int document_id) const {
-    const static map<string, double> WF;
+    const static std::map<std::string, double> WF;
     for (const auto& [id, word_freq] : this->Word_Frequencies_) {
         if (id == document_id) {
             return word_freq;
         }
     }
+
     return WF;
 }
 
 void SearchServer::RemoveDocument(int document_id) {
     this->document_ids_.erase(std::remove(this->document_ids_.begin(), this->document_ids_.end(), document_id), this->document_ids_.end());
     this->documents_.erase(document_id);
-    this->Word_Frequencies_.erase(document_id);
     for (auto& [word, freq] : this->GetWordFrequencies(document_id)) {
         this->word_to_document_freqs_.erase(word);
     }
+
+    this->Word_Frequencies_.erase(document_id);
 }
 
 void PrintDocument(const Document& document) {

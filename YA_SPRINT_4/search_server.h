@@ -13,6 +13,7 @@
 #include <vector>
 #include <deque>
 #include <list>
+#include <execution>
 using namespace std;
 
 
@@ -75,6 +76,16 @@ public:
     const map<string, double>& GetWordFrequencies(int document_id) const;
 
     void RemoveDocument(int document_id);
+
+    template <typename ExecutionPolicy>
+    void RemoveDocument(ExecutionPolicy&& policy, int document_id) {
+        this->document_ids_.erase(std::remove(this->document_ids_.begin(), this->document_ids_.end(), document_id), this->document_ids_.end());
+        this->documents_.erase(document_id);
+        for (auto& [word, freq] : this->GetWordFrequencies(document_id)) {
+            this->word_to_document_freqs_.erase(word);
+        }
+        this->Word_Frequencies_.erase(document_id);
+    }
 
 private:
     struct DocumentData {
