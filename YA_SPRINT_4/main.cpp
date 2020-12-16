@@ -13,7 +13,7 @@ using namespace std;
 
 
 int main() {
-    TestSearchServer();
+    //TestSearchServer();
 
     SearchServer search_server("and with"s);
 
@@ -30,23 +30,23 @@ int main() {
         search_server.AddDocument(++id, text, DocumentStatus::ACTUAL, { 1, 2 });
     }
 
-    const string query = "curly and funny -not"s;
+    const string query = "curly and funny -not";
 
     {
         const auto [words, status] = search_server.MatchDocument(query, 1);
-        cout << words.size() << " words for document 1"s << endl;
+        cout << words.size() << " words for document 1" << endl;
         // 1 words for document 1
     }
 
     {
         const auto [words, status] = search_server.MatchDocument(execution::seq, query, 2);
-        cout << words.size() << " words for document 2"s << endl;
+        cout << words.size() << " words for document 2" << endl;
         // 2 words for document 2
     }
 
     {
         const auto [words, status] = search_server.MatchDocument(execution::par, query, 3);
-        cout << words.size() << " words for document 3"s << endl;
+        cout << words.size() << " words for document 3" << endl;
         // 0 words for document 3
     }
 

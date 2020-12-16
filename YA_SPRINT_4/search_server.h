@@ -103,19 +103,19 @@ public:
 
     template <typename ExecutionPolicy>
     std::tuple<std::vector<std::string_view>, DocumentStatus> MatchDocument(ExecutionPolicy&& policy, const std::string_view& raw_query, int document_id) const {
-        std::string query_tmp = static_cast<string>(raw_query);
+        std::string query_tmp = { raw_query.begin(), raw_query.end() };
         const auto query = ParseQuery(query_tmp);
 
         std::vector<std::string_view> matched_words;
-        for (const std::string& word : query.plus_words) {
+        for (const auto& word : query.plus_words) {
             if (this->word_to_document_freqs_.count(word) == 0) {
                 continue;
             }
             if (this->word_to_document_freqs_.at(word).count(document_id)) {
-                matched_words.push_back(word);
+                matched_words.push_back(static_cast<string_view>(word));
             }
         }
-        for (const std::string& word : query.minus_words) {
+        for (const auto& word : query.minus_words) {
             if (this->word_to_document_freqs_.count(word) == 0) {
                 continue;
             }
