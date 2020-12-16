@@ -29,9 +29,9 @@ void SearchServer::AddDocument(int document_id, const std::string_view& document
     const auto words = SplitIntoWordsNoStop(document);
 
     const double inv_word_count = 1.0 / words.size();
-    for (const std::string& word : words) {
+    for (const auto& word : words) {
         this->word_to_document_freqs_[word][document_id] += inv_word_count;
-        this->Word_Frequencies_[document_id][static_cast<std::string_view>(word)] += inv_word_count;
+        this->Word_Frequencies_[document_id][word] += inv_word_count;
     }
     this->documents_.emplace(document_id, DocumentData{ ComputeAverageRating(ratings), status });
     this->document_ids_.push_back(document_id);
@@ -95,15 +95,17 @@ std::tuple<std::vector<std::string_view>, DocumentStatus> SearchServer::MatchDoc
     const auto query = ParseQuery(query_tmp);
 
     std::vector<std::string_view> matched_words;
-    for (const auto& word : query.plus_words) {
+    for (const auto word : query.plus_words) {
         if (this->word_to_document_freqs_.count(word) == 0) {
             continue;
         }
         if (this->word_to_document_freqs_.at(word).count(document_id)) {
-            matched_words.push_back(static_cast<string_view>(word));
+            auto it = this->word_to_document_freqs_.find(word);
+            const std::string_view& item = (*it).first;
+            matched_words.push_back(item);
         }
     }
-    for (const auto& word : query.minus_words) {
+    for (const auto word : query.minus_words) {
         if (this->word_to_document_freqs_.count(word) == 0) {
             continue;
         }
