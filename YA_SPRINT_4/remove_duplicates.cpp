@@ -1,7 +1,7 @@
 #include "remove_duplicates.h"
 
 void RemoveDuplicates(SearchServer& search_server) {
-    std::map<int, std::vector<std::string>> doc_to_del;
+    std::map<int, std::vector<std::string_view>> doc_to_del;
     for (const int document_id : search_server) {
         for (const auto& [word, freq] : search_server.GetWordFrequencies(document_id)) {
             doc_to_del[document_id].push_back(word);

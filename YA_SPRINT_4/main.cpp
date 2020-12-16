@@ -13,6 +13,8 @@ using namespace std;
 
 
 int main() {
+    TestSearchServer();
+
     SearchServer search_server("and with"s);
 
     for (
@@ -28,36 +30,25 @@ int main() {
         search_server.AddDocument(++id, text, DocumentStatus::ACTUAL, { 1, 2 });
     }
 
-    const string query = "curly and funny"s;
+    const string query = "curly and funny -not"s;
 
-    auto report = [&search_server, &query] {
-        cout << search_server.GetDocumentCount() << " documents total, "s
-            << search_server.FindTopDocuments(query).size() << " documents for query ["s << query << "]"s << endl;
-    };
-
-    report();
-    for (auto& Docs : search_server.FindTopDocuments(query)) {
-        cout << Docs.id << ' ' << Docs.relevance << ' ' << Docs.rating << endl;
-    }
-    // однопоточная версия
-    search_server.RemoveDocument(5);
-    report();
-    for (auto& Docs : search_server.FindTopDocuments(query)) {
-        cout << Docs.id << ' ' << Docs.relevance << ' ' << Docs.rating << endl;
-    }
-    // однопоточная версия
-    search_server.RemoveDocument(1);
-    report();
-    for (auto& Docs : search_server.FindTopDocuments(query)) {
-        cout << Docs.id << ' ' << Docs.relevance << ' ' << Docs.rating << endl;
-    }
-    // многопоточная версия
-    search_server.RemoveDocument(2);
-    report();
-    for (auto& Docs : search_server.FindTopDocuments(query)) {
-        cout << Docs.id << ' ' << Docs.relevance << ' ' << Docs.rating << endl;
+    {
+        const auto [words, status] = search_server.MatchDocument(query, 1);
+        cout << words.size() << " words for document 1"s << endl;
+        // 1 words for document 1
     }
 
+    {
+        const auto [words, status] = search_server.MatchDocument(execution::seq, query, 2);
+        cout << words.size() << " words for document 2"s << endl;
+        // 2 words for document 2
+    }
+
+    {
+        const auto [words, status] = search_server.MatchDocument(execution::par, query, 3);
+        cout << words.size() << " words for document 3"s << endl;
+        // 0 words for document 3
+    }
 
     return 0;
 }

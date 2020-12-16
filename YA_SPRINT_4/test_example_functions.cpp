@@ -20,7 +20,7 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         
         SearchServer server("in the"s);
         server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
-        ASSERT_HINT(server.FindTopDocuments("in").empty(), "top words must be excluded from documents"s);
+        ASSERT_HINT(server.FindTopDocuments("in"s).empty(), "top words must be excluded from documents"s);
     }
 }
 
@@ -106,7 +106,7 @@ void Stop_words_doc() {
     {
         //empty content add
         SearchServer server(""s);
-        server.AddDocument(0, "", DocumentStatus::ACTUAL, { 1,2,3 });
+        server.AddDocument(0, ""s, DocumentStatus::ACTUAL, { 1,2,3 });
         const auto found_docs = server.FindTopDocuments(""s);
         assert(0 == found_docs.size());
     }
@@ -200,7 +200,7 @@ void Raiting_doc() {
         server.AddDocument(45, "average deal of"s, DocumentStatus::ACTUAL, { 1, 2, 3 });
         server.AddDocument(23, "average deal of"s, DocumentStatus::ACTUAL, { 0 });
         server.AddDocument(0, "average deal of"s, DocumentStatus::ACTUAL, { 4, 5, 6 });
-        const auto found_docs = server.FindTopDocuments("deal");
+        const auto found_docs = server.FindTopDocuments("deal"s);
         for (int ptr = 1; ptr < found_docs.size(); ptr++) {
             ASSERT_HINT(found_docs[ptr - 1].rating >= found_docs[ptr].rating, "Check right position with raitings sort from H --> L"s);
         }
@@ -229,7 +229,7 @@ void Status_doc() {
     {
         const std::string query{ "kind cat with long tail"s };
         SearchServer server("with"s);
-        server.AddDocument(1, "nasty cat beautiful tail", DocumentStatus::ACTUAL, { 0, 5, 10 });
+        server.AddDocument(1, "nasty cat beautiful tail"s, DocumentStatus::ACTUAL, { 0, 5, 10 });
         server.AddDocument(2, "old angry fat dog with short tail"s, DocumentStatus::ACTUAL, { -5, 0, 35 });
         server.AddDocument(3, "huge fat parrot"s, DocumentStatus::IRRELEVANT, { -2, -1, 0 });
         server.AddDocument(4, "not beautiful cat"s, DocumentStatus::ACTUAL, { -7, -3, -5 });

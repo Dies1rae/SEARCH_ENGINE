@@ -35,18 +35,45 @@ public:
 
     explicit SearchServer(const std::string& stop_words_text);
 
-    void AddDocument(int document_id, const std::string& document, DocumentStatus status, const std::vector<int>& ratings);
+    explicit SearchServer(const std::string_view& stop_words_text);
+
+    //void AddDocument(int document_id, const std::string& document, DocumentStatus status, const std::vector<int>& ratings);
+
+    void AddDocument(int document_id, const std::string_view& document, DocumentStatus status, const std::vector<int>& ratings);
+
+    //template <typename DocumentPredicate>
+    //std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentPredicate document_predicate) const {
+    //    const auto query = ParseQuery(raw_query);
+
+    //    auto matched_documents = FindAllDocuments(query, document_predicate);
+
+    //    sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
+    //        if (abs(lhs.relevance - rhs.relevance) < EPSILON){
+    //            return lhs.rating > rhs.rating;
+    //        } else {
+    //            return lhs.relevance > rhs.relevance;
+    //        }
+    //        });
+    //    if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
+    //        matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
+    //    }
+    //    return matched_documents;
+    //}
+    //std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentStatus status) const;
+    //std::vector<Document> FindTopDocuments(const std::string& raw_query) const;
 
     template <typename DocumentPredicate>
-    std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentPredicate document_predicate) const {
-        const auto query = ParseQuery(raw_query);
+    std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentPredicate document_predicate) const {
+        std::string tmp_q = static_cast<std::string>(raw_query);
+        const auto query = ParseQuery(tmp_q);
 
         auto matched_documents = FindAllDocuments(query, document_predicate);
 
         sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
-            if (abs(lhs.relevance - rhs.relevance) < EPSILON){
+            if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
                 return lhs.rating > rhs.rating;
-            } else {
+            }
+            else {
                 return lhs.relevance > rhs.relevance;
             }
             });
@@ -55,9 +82,8 @@ public:
         }
         return matched_documents;
     }
-
-    std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentStatus status) const;
-    std::vector<Document> FindTopDocuments(const std::string& raw_query) const;
+    std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentStatus status) const;
+    std::vector<Document> FindTopDocuments(const std::string_view& raw_query) const;
 
     int GetDocumentCount() const;
 
@@ -71,9 +97,37 @@ public:
         return this->document_ids_.end();
     }
 
-    std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
+    //std::tuple<std::vector<std::string_view>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
 
-    const map<string, double>& GetWordFrequencies(int document_id) const;
+    std::tuple<std::vector<std::string_view>, DocumentStatus> MatchDocument(const std::string_view& raw_query, int document_id) const;
+
+    template <typename ExecutionPolicy>
+    std::tuple<std::vector<std::string_view>, DocumentStatus> MatchDocument(ExecutionPolicy&& policy, const std::string_view& raw_query, int document_id) const {
+        std::string query_tmp = static_cast<string>(raw_query);
+        const auto query = ParseQuery(query_tmp);
+
+        std::vector<std::string_view> matched_words;
+        for (const std::string& word : query.plus_words) {
+            if (this->word_to_document_freqs_.count(word) == 0) {
+                continue;
+            }
+            if (this->word_to_document_freqs_.at(word).count(document_id)) {
+                matched_words.push_back(word);
+            }
+        }
+        for (const std::string& word : query.minus_words) {
+            if (this->word_to_document_freqs_.count(word) == 0) {
+                continue;
+            }
+            if (this->word_to_document_freqs_.at(word).count(document_id)) {
+                matched_words.clear();
+                break;
+            }
+        }
+        return { matched_words, documents_.at(document_id).status };
+    }
+
+    const map<std::string_view, double>& GetWordFrequencies(int document_id) const;
 
     void RemoveDocument(int document_id);
 
@@ -93,10 +147,10 @@ private:
         DocumentStatus status;
     };
     const std::set<std::string> stop_words_;
-    std::map<std::string, std::map<int, double>> word_to_document_freqs_;
+    std::map<std::string, std::map<int, double>> word_to_document_freqs_; //
     std::map<int, DocumentData> documents_;
     std::list<int> document_ids_;
-    std::map<int, std::map<std::string, double>> Word_Frequencies_;
+    std::map<int, std::map<std::string_view, double>> Word_Frequencies_; 
 
     bool IsStopWord(const std::string& word) const {
         return stop_words_.count(word) > 0;
@@ -110,6 +164,19 @@ private:
     }
 
     std::vector<std::string> SplitIntoWordsNoStop(const std::string& text) const {
+        std::vector<std::string> words;
+        for (const std::string& word : SplitIntoWords(text)) {
+            if (!IsValidWord(word)) {
+                throw std::invalid_argument("Word "s + word + " is invalid"s);
+            }
+            if (!IsStopWord(word)) {
+                words.push_back(word);
+            }
+        }
+        return words;
+    }
+
+    std::vector<std::string> SplitIntoWordsNoStop(const std::string_view& text) const {
         std::vector<std::string> words;
         for (const std::string& word : SplitIntoWords(text)) {
             if (!IsValidWord(word)) {
