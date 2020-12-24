@@ -114,11 +114,6 @@ public:
         return FindTopDocuments(policy, raw_query, DocumentStatus::ACTUAL);
     }
 
-    template <typename ExecPolicy>
-    std::vector<Document> SearchServer::FindTopDocuments(ExecPolicy&& policy, const std::string_view& raw_query) const {
-        return FindTopDocuments(policy, raw_query, DocumentStatus::ACTUAL);
-    }
-
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentStatus status) const;
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query) const;
 
