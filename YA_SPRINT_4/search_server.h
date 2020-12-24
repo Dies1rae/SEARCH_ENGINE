@@ -72,8 +72,7 @@ public:
         sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
             if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
                 return lhs.rating > rhs.rating;
-            }
-            else {
+            } else {
                 return lhs.relevance > rhs.relevance;
             }
             });
@@ -82,6 +81,44 @@ public:
         }
         return matched_documents;
     }
+
+    template <typename DocumentPredicate, typename ExecPolicy>
+    std::vector<Document> FindTopDocuments(ExecPolicy&& policy, const std::string_view& raw_query, DocumentPredicate document_predicate) const {
+        std::string tmp_q = static_cast<std::string>(raw_query);
+        const auto query = ParseQuery(tmp_q);
+
+        auto matched_documents = FindAllDocuments(query, document_predicate);
+
+        sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
+            if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
+                return lhs.rating > rhs.rating;
+            } else {
+                return lhs.relevance > rhs.relevance;
+            }
+            });
+        if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
+            matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
+        }
+        return matched_documents;
+    }
+ 
+    template <typename ExecPolicy>
+    std::vector<Document> SearchServer::FindTopDocuments(ExecPolicy&& policy, const std::string_view& raw_query, DocumentStatus status) const {
+        return FindTopDocuments(policy, raw_query, [status](int document_id [[maybe_unused]], DocumentStatus document_status, int rating [[maybe_unused]] ) {
+            return document_status == status;
+            });
+    }
+
+    template <typename ExecPolicy>
+    std::vector<Document> SearchServer::FindTopDocuments(ExecPolicy&& policy, const std::string_view& raw_query) const {
+        return FindTopDocuments(policy, raw_query, DocumentStatus::ACTUAL);
+    }
+
+    template <typename ExecPolicy>
+    std::vector<Document> SearchServer::FindTopDocuments(ExecPolicy&& policy, const std::string_view& raw_query) const {
+        return FindTopDocuments(policy, raw_query, DocumentStatus::ACTUAL);
+    }
+
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentStatus status) const;
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query) const;
 
@@ -282,6 +319,7 @@ private:
         }
         return matched_documents;
     }
+
 };
 
 void PrintDocument(const Document& document);
