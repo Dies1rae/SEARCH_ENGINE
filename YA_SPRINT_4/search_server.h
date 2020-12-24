@@ -62,6 +62,7 @@ public:
     //std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentStatus status) const;
     //std::vector<Document> FindTopDocuments(const std::string& raw_query) const;
 
+
     template <typename DocumentPredicate>
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentPredicate document_predicate) const {
         std::string tmp_q = static_cast<std::string>(raw_query);
@@ -82,6 +83,52 @@ public:
         }
         return matched_documents;
     }
+
+    template <typename DocumentPredicate>
+    std::vector<Document> FindTopDocuments(const std::execution::sequenced_policy&, const std::string_view& raw_query, DocumentPredicate document_predicate) const {
+        std::string tmp_q = static_cast<std::string>(raw_query);
+        const auto query = ParseQuery(tmp_q);
+
+        auto matched_documents = FindAllDocuments(query, document_predicate);
+
+        sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
+            if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
+                return lhs.rating > rhs.rating;
+            }
+            else {
+                return lhs.relevance > rhs.relevance;
+            }
+            });
+        if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
+            matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
+        }
+        return matched_documents;
+    }
+
+    template <typename DocumentPredicate>
+    std::vector<Document> FindTopDocuments(const std::execution::parallel_policy&, const std::string_view& raw_query, DocumentPredicate document_predicate) const {
+        std::string tmp_q = static_cast<std::string>(raw_query);
+        const auto query = ParseQuery(tmp_q);
+
+        auto matched_documents = FindAllDocuments(query, document_predicate);
+
+        sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
+            if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
+                return lhs.rating > rhs.rating;
+            }
+            else {
+                return lhs.relevance > rhs.relevance;
+            }
+            });
+        if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
+            matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
+        }
+        return matched_documents;
+    }
+    std::vector<Document> FindTopDocuments(const std::execution::sequenced_policy&, const std::string_view& raw_query, DocumentStatus status) const;
+    std::vector<Document> FindTopDocuments(const std::execution::sequenced_policy&, const std::string_view& raw_query) const;
+    std::vector<Document> FindTopDocuments(const std::execution::parallel_policy&, const std::string_view& raw_query, DocumentStatus status) const;
+    std::vector<Document> FindTopDocuments(const std::execution::parallel_policy&, const std::string_view& raw_query) const;
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentStatus status) const;
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query) const;
 
