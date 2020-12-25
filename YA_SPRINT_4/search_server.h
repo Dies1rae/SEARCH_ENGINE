@@ -37,31 +37,7 @@ public:
 
     explicit SearchServer(const std::string_view& stop_words_text);
 
-    //void AddDocument(int document_id, const std::string& document, DocumentStatus status, const std::vector<int>& ratings);
-
     void AddDocument(int document_id, const std::string_view& document, DocumentStatus status, const std::vector<int>& ratings);
-
-    //template <typename DocumentPredicate>
-    //std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentPredicate document_predicate) const {
-    //    const auto query = ParseQuery(raw_query);
-
-    //    auto matched_documents = FindAllDocuments(query, document_predicate);
-
-    //    sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
-    //        if (abs(lhs.relevance - rhs.relevance) < EPSILON){
-    //            return lhs.rating > rhs.rating;
-    //        } else {
-    //            return lhs.relevance > rhs.relevance;
-    //        }
-    //        });
-    //    if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
-    //        matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
-    //    }
-    //    return matched_documents;
-    //}
-    //std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentStatus status) const;
-    //std::vector<Document> FindTopDocuments(const std::string& raw_query) const;
-
 
     template <typename DocumentPredicate>
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentPredicate document_predicate) const {
@@ -143,8 +119,6 @@ public:
     auto end() const {
         return this->document_ids_.end();
     }
-
-    //std::tuple<std::vector<std::string_view>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
 
     std::tuple<std::vector<std::string_view>, DocumentStatus> MatchDocument(const std::string_view& raw_query, int document_id) const;
 
