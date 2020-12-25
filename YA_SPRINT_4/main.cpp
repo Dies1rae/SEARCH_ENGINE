@@ -12,8 +12,6 @@
 using namespace std;
 
 
-
-
 int main() {
     SearchServer search_server("and with"s);
 
@@ -42,9 +40,9 @@ int main() {
 
     cout << "Even ids:"s << endl;
     // параллельная версия
-    /*for (const Document& document : search_server.FindTopDocuments(execution::par, "curly nasty cat"s, [](int document_id, DocumentStatus status, int rating) { return document_id % 2 == 0; })) {
+    for (const Document& document : search_server.FindTopDocuments(execution::par, "curly nasty cat"s, [](int document_id, DocumentStatus status, int rating) { return document_id % 2 == 0; })) {
         PrintDocument(document);
-    }*/
+    }
 
     return 0;
 }
