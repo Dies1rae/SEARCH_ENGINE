@@ -62,35 +62,18 @@ public:
     //std::vector<Document> FindTopDocuments(const std::string& raw_query, DocumentStatus status) const;
     //std::vector<Document> FindTopDocuments(const std::string& raw_query) const;
 
-    template <typename DocumentPredicate>
-    std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentPredicate document_predicate) const {
-        std::string tmp_q = static_cast<std::string>(raw_query);
-        const auto query = ParseQuery(tmp_q);
-
-        auto matched_documents = FindAllDocuments(query, document_predicate);
-
-        sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
-            if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
-                return lhs.rating > rhs.rating;
-            } else {
-                return lhs.relevance > rhs.relevance;
-            }
-            });
-        if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
-            matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
-        }
-        return matched_documents;
-    }
-
-    template <typename DocumentPredicate, typename ExecPolicy>
+    template <typename ExecPolicy, typename DocumentPredicate>
     std::vector<Document> FindTopDocuments(ExecPolicy&& policy, const std::string_view& raw_query, DocumentPredicate document_predicate) const {
+        if (!this->IsExecutionPolicyParallel(policy)) {
+            return FindTopDocuments(raw_query, document_predicate);
+        }
+
         std::string tmp_q = static_cast<std::string>(raw_query);
         const auto query = ParseQuery(tmp_q);
-
         auto matched_documents = FindAllDocuments(query, document_predicate);
 
         sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
-            if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
+            if (std::abs(lhs.relevance - rhs.relevance) < EPSILON) {
                 return lhs.rating > rhs.rating;
             } else {
                 return lhs.relevance > rhs.relevance;
@@ -112,6 +95,26 @@ public:
     template <typename ExecPolicy>
     std::vector<Document> SearchServer::FindTopDocuments(ExecPolicy&& policy, const std::string_view& raw_query) const {
         return FindTopDocuments(policy, raw_query, DocumentStatus::ACTUAL);
+    }
+
+    template <typename DocumentPredicate>
+    std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentPredicate document_predicate) const {
+        std::string tmp_q = static_cast<std::string>(raw_query);
+        const auto query = ParseQuery(tmp_q);
+
+        auto matched_documents = FindAllDocuments(query, document_predicate);
+
+        sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
+            if (abs(lhs.relevance - rhs.relevance) < EPSILON) {
+                return lhs.rating > rhs.rating;
+            } else {
+                return lhs.relevance > rhs.relevance;
+            }
+            });
+        if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
+            matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
+        }
+        return matched_documents;
     }
 
     std::vector<Document> FindTopDocuments(const std::string_view& raw_query, DocumentStatus status) const;
@@ -174,6 +177,11 @@ public:
             this->word_to_document_freqs_.erase(word);
         }
         this->Word_Frequencies_.erase(document_id);
+    }
+
+    template <typename ExecutionPolicy>
+    bool IsExecutionPolicyParallel(ExecutionPolicy&& policyA) {
+        return std::execution::par == policyA;
     }
 
 private:
